@@ -8,9 +8,9 @@ function ShelfItems({ title, shelf, handleBookShelf }) {
         <h2 className="bookshelf-title">{title}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
-            {shelf.map((book, index) => (
+            {shelf.map(book => (
               <BookDetails
-                key={index}
+                key={book.id}
                 book={book}
                 handleBookShelf={handleBookShelf}
               />

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ShelfItems from "./ShelfItems";
 import * as BooksAPI from "../BooksAPI";
 import escapeRegExp from "escape-string-regexp";
+import { Link } from "react-router-dom";
 
 export default class AllBooks extends Component {
   state = {
@@ -74,7 +75,7 @@ export default class AllBooks extends Component {
           />
         </div>
         <div className="open-search">
-          <button onClick={() => this.showSearchPage(true)}>Add a book</button>
+          <Link to="/search">Add a book</Link>
         </div>
       </div>
     );

@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function BookDetails({ key, book, handleBookShelf }) {
+export default function BookDetails({ book, handleBookShelf }) {
   const imageThumb = book.imageLinks ? book.imageLinks.smallThumbnail : null;
   return (
-    <li key={key}>
+    <li key={book.id}>
       <div className="book">
         <div className="book-top">
           <div
