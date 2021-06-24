@@ -1,14 +1,20 @@
 import React from "react";
-import BookDetails from "./BookDeatail";
+import BookDetails from "./BookDetails";
 
-function ShelfItems({ shelf }) {
+function ShelfItems({ title, shelf, handleBookShelf }) {
   return (
     <div>
       <div className="bookshelf">
-        <h2 className="bookshelf-title">{shelf}</h2>
+        <h2 className="bookshelf-title">{title}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
-            <BookDetails />
+            {shelf.map((book, index) => (
+              <BookDetails
+                key={index}
+                book={book}
+                handleBookShelf={handleBookShelf}
+              />
+            ))}
           </ol>
         </div>
       </div>
