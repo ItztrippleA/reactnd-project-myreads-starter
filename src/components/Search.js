@@ -4,10 +4,13 @@ import BookDetails from "./BookDetails";
 import * as BooksAPI from "../BooksAPI";
 
 export default class search extends Component {
+  // a state to handle the state of query searched and stored
   state = {
     books: [],
     query: ""
   };
+
+  //   fetch and set state of input query from the backend
   handleUpdateQuery(query) {
     BooksAPI.search(query).then(books =>
       books ? this.setState({ books }) : []
