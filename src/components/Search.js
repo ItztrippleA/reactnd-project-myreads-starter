@@ -1,53 +1,28 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import BookDetails from "./BookDetails";
+import React from "react";
+import { Component } from "react";
 import * as BooksAPI from "../BooksAPI";
+import Book from "./BookDetails";
+import { Link } from "react-router-dom";
 
-export default class search extends Component {
-  // a state to handle the state of query searched and stored
+class Search extends Component {
   state = {
-    books: [],
-    query: ""
+    query: "",
+    result: []
   };
-
-  //   fetch and set state of input query from the backend
-  handleUpdateQuery(query) {
-    BooksAPI.search(query).then(books =>
-      books ? this.setState({ books }) : []
-    );
-    this.setState({ query });
-  }
-
-  renderSearchResults() {
-    const { books, query } = this.state;
-
-    if (query) {
-      return books.error ? (
-        <div>No results found</div>
-      ) : (
-        books.map((book, index) => {
-          return (
-            <BookDetails
-              key={index}
-              book={book}
-              handleBookShelf={this.handleBookShelf.bind(this)}
-            />
-          );
+  updateQuery(query) {
+    this.setState({ query: query });
+    if (query.length > 0) {
+      BooksAPI.search(query)
+        .then(data => {
+          if (typeof data !== "undefined" && data.length > 0) {
+            this.setState({ result: data });
+          }
         })
-      );
+        .catch(this.setState({ result: [] }));
+    } else {
+      this.setState({ result: [] });
     }
   }
-
-  handleBookShelf(book, shelf) {
-    BooksAPI.update(book, shelf)
-      .then(() =>
-        shelf !== "none"
-          ? alert(`${book.title} has been added to your shelf!`)
-          : null
-      )
-      .catch(() => alert("Something went wrong! Please try again!"));
-  }
-
   render() {
     return (
       <div className="search-books">
@@ -60,14 +35,45 @@ export default class search extends Component {
               type="text"
               placeholder="Search by title or author"
               value={this.state.query}
-              onChange={e => this.handleUpdateQuery(e.target.value)}
+              onChange={e => {
+                this.updateQuery(e.target.value);
+              }}
             />
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid">{this.renderSearchResults()}</ol>
+          <ol className="books-grid">
+            {this.state.result.map(e => {
+              let bookOnShelf = this.props.booksFromMainPage.find(
+                b => b.id === e.id
+              );
+              if (bookOnShelf) {
+                e.shelf = bookOnShelf.shelf;
+              } else {
+                e.shelf = "none";
+              }
+              return (
+                e.title &&
+                e.imageLinks &&
+                e.imageLinks.thumbnail &&
+                e.authors && (
+                  <Book
+                    key={e.id}
+                    Book={e}
+                    updateShelf={this.props.updateShelf}
+                    title={e.title}
+                    image={e.imageLinks.thumbnail}
+                    autor={e.authors}
+                    value={e.shelf}
+                  />
+                )
+              );
+            })}
+          </ol>
         </div>
       </div>
     );
   }
 }
+
+export default Search;
